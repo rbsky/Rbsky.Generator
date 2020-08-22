@@ -1,0 +1,56 @@
+using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
+using JetBrains.Annotations;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
+
+namespace @Model.NameSpace.@(Model.EntityName)s
+{
+    /// <summary>
+    /// @(Model.EntityDescription)
+    /// </summary>
+    [Table(@(Model.NameSpace.Replace(".",""))Consts.DefaultTablePrefix + "@Model.EntityName")]
+    public class @(Model.EntityName) : @(Model.EntityBaseClass)@if(@Model.EntityKeyType != "int")
+        {
+@:<@Model.EntityKeyType>,IMayHaveTenant
+        }else{
+@:,IMayHaveTenant
+        }
+    {
+        public @(Model.EntityName)()
+        {
+        }
+
+        public virtual int? TenantId { get; set; }
+        
+        #region 基本属性
+        @foreach (var item in Model.ClounmInfos)
+        {
+            @:/// <summary>
+            @:/// @item.PropertyDescription
+            @:/// </summary>
+            @:@if(@item.PropertyType!="string" && @item.IsRequired==false){
+ @:public @item.PropertyType? @item.PropertyName { get; set; }
+            } else {
+ @:public @item.PropertyType @item.PropertyName { get; set; }
+            }
+        }
+        /// <summary>
+        /// 创建人
+        /// </summary>
+        public string CreationUser { get; set; }
+        /// <summary>
+        /// 最后修改人
+        /// </summary>
+        public string LastModifierUser { get; set; }
+        #endregion
+
+
+        #region 导航属性
+        
+        #endregion
+    }
+}

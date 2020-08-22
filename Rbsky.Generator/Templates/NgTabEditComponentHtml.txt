@@ -1,0 +1,46 @@
+﻿<page-header
+  [title]="editDto.@(Model.EntityNameLower).id > 0 ? '编辑 - ' + editName : '新增 '"
+  [logo]="phLogo"
+  [action]="phAction"
+>
+  <form #f="ngForm" (ngSubmit)="save()" class="sf__no-error" autocomplete="off">
+    <ng-template #phLogo class>
+      <img src="https://gw.alipayobjects.com/zos/rmsportal/nxkuOJlFJuAUhzlMTCEe.png" />
+    </ng-template>
+    <ng-template #phAction>
+      <nz-button-group>
+        <button nz-button [disabled]="f.invalid || saving" (click)="save(false)" [nzLoading]="saving">保存</button>
+        <button nz-button type="button" (click)="cancel($event)">退出</button></nz-button-group
+      >&nbsp;
+      <button
+        nz-button
+        nzGhost="true"
+        [nzType]="'primary'"
+        [disabled]="f.invalid || saving"
+        (click)="save(true)"
+        [nzLoading]="saving"
+      >
+        保存并退出
+      </button>
+    </ng-template>
+    <div se-container col="3" labelWidth="50px">
+    @foreach (var item in Model.ClounmInfos)
+    {
+@:@if(@item.IsCreateOrEdit){
+@:<!-- @item.PropertyDescription -->
+@:<se label="@item.PropertyDescription">
+@:<input
+@:nz-input
+@:name="@(item.PropertyLowerName)"
+@:[(ngModel)]="editDto.@(Model.EntityNameLower).@item.PropertyLowerName"
+@:[placeholder]="'@item.PropertyDescription'"
+@:autocomplete="off"
+@:/>
+@:</se>
+        }
+    }
+
+    </div>
+   
+  </form>
+</page-header>

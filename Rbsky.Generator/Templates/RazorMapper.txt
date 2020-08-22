@@ -1,0 +1,19 @@
+﻿using AutoMapper;
+using @Model.NameSpace.@(Model.EntityName)s;
+using @Model.NameSpace.@(Model.EntityName)s.Dtos;
+using Rbsky;
+namespace @Model.NameSpace
+{
+    internal static class CustomDtoMapper
+    {
+        public static void CreateMappings(IMapperConfigurationExpression configuration)
+        {
+            //@(Model.EntityDescription)
+            configuration.CreateMap<@(Model.EntityName), @(Model.EntityName)ListDto>();
+            configuration.CreateMap<@(Model.EntityName), @(Model.EntityName)EditDto>();
+            configuration.CreateMap<@(Model.EntityName)EditDto, @(Model.EntityName)>();
+
+
+        }
+    }
+}

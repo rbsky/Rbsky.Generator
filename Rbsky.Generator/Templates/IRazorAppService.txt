@@ -1,0 +1,42 @@
+using Abp.Application.Services;
+using Abp.Application.Services.Dto;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using @Model.NameSpace.@(Model.EntityName)s.Dtos;
+
+namespace @Model.NameSpace.@(Model.EntityName)s
+{
+    /// <summary>
+    /// @(Model.EntityDescription)应用服务接口
+    /// </summary>
+    public interface I@(Model.EntityName)AppService : IApplicationService
+    {
+        /// <summary>
+        /// 分页获取@(Model.EntityDescription)数据集合
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<PagedResultDto<@(Model.EntityName)ListDto>> GetPaged@(Model.EntityName)s(@(Model.EntityName)PagedInput input);
+
+        /// <summary>
+        /// 获取@(Model.EntityDescription)编辑信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<Get@(Model.EntityName)ForEditDto> Get@(Model.EntityName)ForEdit(NullableIdDto<@Model.EntityKeyType> input);
+
+        /// <summary>
+        /// 创建或修改@(Model.EntityDescription)信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task CreateOrUpdate@(Model.EntityName)(Get@(Model.EntityName)ForEditDto input);
+
+        /// <summary>
+        /// 批量删除@(Model.EntityDescription)
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task BatchDelete(List<EntityDto<@Model.EntityKeyType>> inputs);
+    }
+}

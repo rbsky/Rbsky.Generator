@@ -1,0 +1,34 @@
+using Abp.Application.Services.Dto;
+using Abp.Domain.Entities.Auditing;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace @Model.NameSpace.@(Model.EntityName)s.Dtos
+{
+    /// <summary>
+    /// @(Model.EntityDescription) 列表Dto
+    /// </summary>
+    public class @(Model.EntityName)ListDto : EntityDto<@Model.EntityKeyType>, IHasCreationTime,IHasModificationTime
+    {
+        @foreach (var item in Model.ClounmInfos)
+        {
+        @:/// <summary>
+        @:/// @item.PropertyDescription
+        @:/// </summary>
+        @:public @item.PropertyType @item.PropertyName { get; set; }
+        }
+        /// <summary>
+        /// 创建人
+        /// </summary>
+        public string CreationUser { get; set; }
+        /// <summary>
+        /// 最后修改人
+        /// </summary>
+        public string LastModifierUser { get; set; }
+       public DateTime CreationTime { get; set; }
+       public DateTime? LastModificationTime { get; set; }
+    }
+}
+

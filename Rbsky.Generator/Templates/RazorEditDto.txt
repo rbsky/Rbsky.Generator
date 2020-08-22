@@ -1,0 +1,23 @@
+using Abp.Application.Services.Dto;
+using Abp.Domain.Entities.Auditing;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace @Model.NameSpace.@(Model.EntityName)s.Dtos
+{
+    /// <summary>
+    /// @(Model.EntityDescription) 编辑Dto
+    /// </summary>
+    public class @(Model.EntityName)EditDto: NullableIdDto<@Model.EntityKeyType>
+    {
+        @foreach (var item in Model.ClounmInfos)
+        {
+        @:/// <summary>
+        @:/// @item.PropertyDescription
+        @:/// </summary>
+        @:public @item.PropertyType @item.PropertyName { get; set; }
+        }
+    }
+}

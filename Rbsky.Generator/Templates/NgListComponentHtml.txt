@@ -1,0 +1,196 @@
+﻿<page-header> </page-header>
+<nz-card [nzBordered]="false">
+  <div class="mb-md">
+    <!-- 搜索框 -->
+    <form nz-form [nzLayout]="'inline'" (ngSubmit)="refresh()" class="search__form">
+      <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }">
+        <div nz-col nzMd="8" nzSm="24">
+          <nz-form-item>
+            <nz-form-label nzFor="filterText">关键字</nz-form-label>
+            <nz-form-control>
+              <input
+                nz-input
+                [(ngModel)]="filterText"
+                name="filterText"
+                placeholder="关键字"
+                id="filterText"
+                autocomplete="off"
+              />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <div nz-col nz-col nzMd="8" nzSm="24">
+          <nz-form-item nzAlign="middle">
+            <nz-button-group>
+              <button nz-button nzGhost="true" nzType="primary" type="submit" [nzLoading]="isTableLoading">
+                查询
+              </button>
+              <button nz-button nzGhost="true" nzType="primary" type="reset">
+                重置
+              </button>
+            </nz-button-group></nz-form-item
+          >
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <nz-alert [nzType]="'info'" [nzShowIcon]="true" [nzMessage]="message">
+    <ng-template #message>
+      <span [innerHTML]="l('GridSelectedXItemsTips', selectedDataItems.length)"> </span>
+      <a (click)="restCheckStatus(dataList)" class="ml-md">
+        {{ l('ClearEmpty') }}
+      </a>
+      <nz-divider nzType="vertical"></nz-divider>
+      <nz-button-group nzSize="small">
+        <button nz-button nzGhost="true" [nzType]="'primary'" (click)="refresh()">
+          <i class="iconfont icon-sync"></i>
+          <span>
+            {{ l('Refresh') }}
+          </span>
+        </button>
+        <button
+          nz-button
+          nzGhost="true"
+          [nzType]="'primary'"
+          *ngIf="isGranted('Pages.BaseData.Items.Create')"
+          (click)="create()"
+        >
+          <i class="iconfont icon-plus"></i>
+          <span>
+            {{ l('Create') }}
+          </span>
+        </button>
+        <button
+          nz-button
+          nzGhost="true"
+          [nzType]="'primary'"
+          *ngIf="isGranted('Pages.BaseData.Items.Delete') && selectedDataItems.length > 0"
+          (click)="batchDelete()"
+        >
+          <i class="iconfont icon-delete"></i>
+          <span>
+            {{ l('Delete') }}
+          </span>
+        </button>
+      </nz-button-group>
+    </ng-template>
+  </nz-alert>
+
+  <!-- 表格 -->
+  <div class="mb-md">
+    <nz-table
+      #ajaxTable
+      nzShowSizeChanger
+      [nzData]="dataList"
+      [nzTotal]="totalItems"
+      [(nzPageIndex)]="pageNumber"
+      [(nzPageSize)]="pageSize"
+      [nzLoading]="isTableLoading"
+      (nzPageIndexChange)="pageNumberChange()"
+      (nzPageSizeChange)="refresh()"
+      [nzFrontPagination]="false"
+      [nzNoResult]="noDataTemplate"
+      [nzShowTotal]="showTotalTemplate"
+    >
+      <!-- 暂无数据 -->
+      <ng-template #noDataTemplate>
+        <no-data></no-data>
+      </ng-template>
+      <!-- 分页信息显示 当前 1 页/共 3 页，共 5 条/显示 1-2 条 -->
+      <ng-template #showTotalTemplate let-total let-range="range">
+        {{ l('GridFooterDisplayText', pageNumber, totalPages, total, range[0], range[1]) }}
+      </ng-template>
+      <!-- 表头 -->
+      <thead>
+        <tr>
+          <th
+            nzWidth="60px"
+            nzShowCheckbox
+            [(nzChecked)]="allChecked"
+            [nzDisabled]="allCheckboxDisabled"
+            [nzIndeterminate]="checkboxIndeterminate"
+            (nzCheckedChange)="checkAll($event)"
+          ></th>
+          @foreach (var item in Model.ClounmInfos)
+        {
+@:@if(@item.IsShowInList){
+        @:<th nzWidth="100px">
+        @:<span>{{ l('@item.PropertyName') }}</span>
+        @:</th>
+}
+        }
+          <th nzWidth="100px">
+            <span>{{ l('CreationUser') }}</span>
+          </th>
+          <th class="text-center" nzWidth="200px">
+            <span>{{ l('CreationTime') }}</span>
+          </th>
+          <th nzRight nzWidth="100px">
+            <span>{{ l('Actions') }}</span>
+          </th>
+        </tr>
+      </thead>
+      <!-- 表格内容 -->
+
+      <tbody>
+        <tr *ngFor="let item of ajaxTable.data">
+          <td nzShowCheckbox [(nzChecked)]="item.checked" (nzCheckedChange)="refreshCheckStatus(dataList)"></td>
+          <td>
+            <span nz-tooltip [nzTooltipTitle]="item.itemCode">
+              <ellipsis lines="1">
+                {{ item.itemCode }}
+              </ellipsis>
+            </span>
+          </td>
+          <td>
+            <span nz-tooltip [nzTooltipTitle]="item.itemName">
+              <ellipsis lines="1">
+                {{ item.itemName }}
+              </ellipsis>
+            </span>
+          </td>
+          <td class="text-center" [innerHTML]="item.isActive | yn"></td>
+          <td>{{ item.creationUser }}</td>
+          <td class="text-center">
+            <span nz-tooltip [nzTooltipTitle]="item.creationTime | _date:'YYYY-MM-DD'"> {{ item.creationTime | _date:'YYYY-MM-DD' }}</span>
+          </td>
+          <td class="text-center" nzRight>
+            <!-- 操作 -->
+            <ng-container *ngIf="isGranted('Pages.BaseData.@(Model.EntityName).Edit') || isGranted('Pages.BaseData.@(Model.EntityName).Delete')">
+              <ng-container>
+                <a nz-dropdown [nzDropdownMenu]="menu">
+                  {{ l('Action') }}
+                  <i class="iconfont icon-down "></i>
+                </a>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                  <ul nz-menu>
+                    <li nz-menu-item *ngIf="isGranted('Pages.BaseData.@(Model.EntityName).Edit')">
+                      <a (click)="edit(item)">
+                        <i class="iconfont icon-edit  mr-sm"></i>
+                        <span>{{ l('Edit') }}</span>
+                      </a>
+                    </li>
+                    <li nz-menu-item *ngIf="isGranted('Pages.BaseData.@(Model.EntityName).Delete')">
+                      <a
+                        nz-popconfirm
+                        [nzPopconfirmTitle]="l('AreYouSure')"
+                        (nzOnConfirm)="delete(item)"
+                        [nzOkText]="l('YesDelete')"
+                        [nzCancelText]="l('Cancel')"
+                      >
+                        <i class="iconfont icon-delete mr-sm"></i>
+                        <span>{{ l('Delete') }}</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nz-dropdown-menu>
+              </ng-container>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</nz-card>

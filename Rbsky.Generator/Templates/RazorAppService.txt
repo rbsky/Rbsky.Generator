@@ -1,0 +1,109 @@
+using Abp.Application.Services.Dto;
+using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Extensions;
+using Abp.Linq.Extensions;
+using System.Linq.Dynamic.Core;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using @(Model.NameSpace).Authorization;
+using @Model.NameSpace.@(Model.EntityName)s.Dtos;
+
+namespace @Model.NameSpace.@(Model.EntityName)s
+{
+    /// <summary>
+    /// @(Model.EntityDescription)应用服务
+    /// </summary>
+    [AbpAuthorize]
+    public class @(Model.EntityName)AppService : @(Model.NameSpace.Replace(".",""))AppServiceBase, I@(Model.EntityName)AppService
+    {
+        #region 初始化
+        private readonly IRepository<@(Model.EntityName), @(Model.EntityKeyType)> _@(Model.EntityNameLower)Repository;
+
+        public @(Model.EntityName)AppService(IRepository<@(Model.EntityName), @(Model.EntityKeyType)> @(Model.EntityNameLower)Repository)
+        {
+            _@(Model.EntityNameLower)Repository = @(Model.EntityNameLower)Repository;
+        }
+        #endregion
+
+        public async Task<PagedResultDto<@(Model.EntityName)ListDto>> GetPaged@(Model.EntityName)s(@(Model.EntityName)PagedInput input)
+        {
+            var query = _@(Model.EntityNameLower)Repository.GetAll();
+
+            var totalCount = await query.CountAsync();//总数
+            var items = await query.OrderBy(input.Sorting).PageBy(input).ToListAsync();
+
+            return new PagedResultDto<@(Model.EntityName)ListDto>(
+                totalCount,
+                items.Select(item =>
+                {
+                    var dto = ObjectMapper.Map<@(Model.EntityName)ListDto>(item);
+                    return dto;
+                }).ToList());
+        }
+
+        public async Task<Get@(Model.EntityName)ForEditDto> Get@(Model.EntityName)ForEdit(NullableIdDto<@Model.EntityKeyType> input)
+        {
+            var get@(Model.EntityName)ForEdit = new Get@(Model.EntityName)ForEditDto()
+            {
+                @(Model.EntityName) = new @(Model.EntityName)EditDto()
+            };
+
+            if (input.Id.HasValue && input.Id.Value > 0)
+            {
+                var @(Model.EntityNameLower) = await _@(Model.EntityNameLower)Repository.GetAsync(input.Id.Value);
+                get@(Model.EntityName)ForEdit.@(Model.EntityName) = ObjectMapper.Map<@(Model.EntityName)EditDto>(@(Model.EntityNameLower));
+            }
+
+            return get@(Model.EntityName)ForEdit;
+        }
+
+        public async Task CreateOrUpdate@(Model.EntityName)(Get@(Model.EntityName)ForEditDto input)
+        {
+            if (input.@(Model.EntityName).Id.HasValue && input.@(Model.EntityName).Id.Value > 0)
+            {
+                await Update@(Model.EntityName)(input);
+            }
+            else
+            {
+                await Create@(Model.EntityName)(input);
+            }
+        }
+
+        /// <summary>
+        /// 添加@(Model.EntityDescription)
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private async Task Create@(Model.EntityName)(Get@(Model.EntityName)ForEditDto input)
+        {
+            var @(Model.EntityNameLower) = ObjectMapper.Map<@(Model.EntityName)>(input.@(Model.EntityName));
+            @(Model.EntityNameLower).CreationUser = AbpSession.GetUserName();
+            @(Model.EntityNameLower).LastModifierUser = AbpSession.GetUserName();
+            await _@(Model.EntityNameLower)Repository.InsertAsync(@(Model.EntityNameLower));
+        }
+
+        /// <summary>
+        /// 更新@(Model.EntityDescription)
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private async Task Update@(Model.EntityName)(Get@(Model.EntityName)ForEditDto input)
+        {
+            var @(Model.EntityNameLower) = await _@(Model.EntityNameLower)Repository.GetAsync(input.@(Model.EntityName).Id.Value);
+            ObjectMapper.Map(input.@(Model.EntityName), @(Model.EntityNameLower));
+            @(Model.EntityNameLower).LastModifierUser = AbpSession.GetUserName();
+            await _@(Model.EntityNameLower)Repository.UpdateAsync(@(Model.EntityNameLower));
+        }
+        /// <summary>
+        /// 批量删除
+        /// </summary>
+        public async Task BatchDelete(List<EntityDto<@Model.EntityKeyType>> inputs)
+        {
+            await _@(Model.EntityNameLower)Repository.DeleteAsync(t => inputs.Select(p => p.Id).Contains(t.Id));
+        }
+    }
+}

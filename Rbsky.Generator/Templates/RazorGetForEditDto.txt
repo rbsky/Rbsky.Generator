@@ -1,0 +1,20 @@
+using Abp.Application.Services.Dto;
+using Abp.Domain.Entities.Auditing;
+using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace @Model.NameSpace.@(Model.EntityName)s.Dtos
+{
+	/// <summary>
+    /// @(Model.EntityDescription) 编辑Dto
+    /// </summary>
+    public class Get@(Model.EntityName)ForEditDto
+    {
+        /// <summary>
+        /// @(Model.EntityDescription)
+        /// </summary>
+        public @(Model.EntityName)EditDto @(Model.EntityName) { get; set; }
+    }
+}

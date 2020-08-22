@@ -1,0 +1,29 @@
+﻿using Abp.Runtime.Validation;
+using Rbsky.Product.Dto;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace @Model.NameSpace.@(Model.EntityName)s.Dtos
+{
+    /// <summary>
+    /// @(Model.EntityDescription) 分页查询输入Dto
+    /// </summary>
+    public class @(Model.EntityName)PagedInput : PagedSortedAndFilteredInputDto, IShouldNormalize
+    {
+       @foreach (var item in Model.ClounmInfos)
+        {
+        @:@if(@item.IsFilter){
+        @:/// <summary>
+        @:/// @item.PropertyDescription
+        @:/// </summary>
+        @:public @item.PropertyType @item.PropertyName { get; set; }
+        }
+        }
+
+        public void Normalize()
+        {
+            if (string.IsNullOrEmpty(Sorting)) Sorting = "Id";
+        }
+    }
+}

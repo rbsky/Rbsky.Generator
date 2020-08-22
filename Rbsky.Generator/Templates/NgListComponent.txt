@@ -1,0 +1,101 @@
+﻿import { Component, OnInit, Injector } from '@@angular/core';
+import { PagedListingComponentBase, PagedRequestDto } from '@@shared/component-base';
+import { @(Model.EntityName)ServiceProxy, @(Model.EntityName)ListDto, EntityDtoOfInt32 } from '@@shared/service-proxies/service-proxies';
+import { finalize } from 'rxjs/operators';
+import { CreateOrEdit@(Model.EntityName)Component } from './create-or-edit-@(Model.AngularEntityName)/create-or-edit-@(Model.AngularEntityName).component';
+import { Router, ActivatedRoute } from '@@angular/router';
+
+@@Component({
+  selector: 'app-@(Model.AngularEntityName)',
+  templateUrl: './@(Model.AngularEntityName).component.html',
+  styles: [],
+})
+/**
+ * @(Model.EntityDescription)
+ */
+export class @(Model.EntityName)Component extends PagedListingComponentBase<@(Model.EntityName)ListDto> implements OnInit {
+  constructor(injector: Injector, 
+  private _@(Model.EntityNameLower)Service: @(Model.EntityName)ServiceProxy,
+  private router: Router,
+  private activatedRoute: ActivatedRoute,
+  ) {
+    super(injector);
+  }
+
+  ngOnInit() {
+    super.ngOnInit();
+    this.activatedRoute.url.subscribe(params => {
+      this.refresh();
+    });
+  }
+  protected fetchDataList(request: PagedRequestDto, pageNumber: number, finishedCallback: Function): void {
+    this._@(Model.EntityNameLower)Service
+      .getPaged@(Model.EntityName)s(
+        this.filterText,
+        request.sorting,
+        request.maxResultCount,
+        request.skipCount,
+      )
+      .pipe(
+        finalize(() => {
+          finishedCallback();
+        }),
+      )
+      .subscribe(result => {
+        this.dataList = result.items;
+        this.showPaging(result);
+      });
+  }
+  create() {
+    @if(@Model.IsModalForm==1){
+    @:this.modalHelper.static(CreateOrEdit@(Model.EntityName)Component, {}, 'md').subscribe(res => {
+    @:  if (res) {
+    @:    this.refresh();
+    @:  }
+    @:});
+  }else{
+    @:this.router.navigate(['edit-@(Model.EntityName)', 0], { relativeTo: this.activatedRoute });
+  }
+ }
+  edit(entity: @(Model.EntityName)ListDto): void {
+  @if(@Model.IsModalForm==1){
+    @:this.modalHelper.static(CreateOrEdit@(Model.EntityName)Component, { id: entity.id }, 'md').subscribe(res => {
+    @:  if (res) {
+    @:    this.refresh();
+    @:  }
+    @:});
+  }else{
+    @:this.router.navigate(['edit-@(Model.EntityName)', entity.id], { relativeTo: this.activatedRoute });
+  }
+    
+  }
+  delete(item: @(Model.EntityName)ListDto) {
+    const dto = new EntityDtoOfInt32();
+    dto.id = item.id;
+    let ids = [];
+    ids = [...ids, dto];
+    this._@(Model.EntityNameLower)Service.batchDelete(ids).subscribe(() => {
+      this.refresh();
+      this.notify.success(this.l('SuccessfullyRemoved'));
+    });
+  }
+  batchDelete() {
+    const selectCount = this.selectedDataItems.length;
+    if (selectCount <= 0) {
+      abp.message.warn(this.l('PleaseSelectAtLeastOneItem'));
+      return;
+    }
+    this.message.confirm(
+      this.l('BatchDeleteItems', selectCount, this.selectedDataItems.length),
+      this.l('AreYouSure'),
+      res => {
+        if (res) {
+          this._@(Model.EntityNameLower)Service.batchDelete(this.selectedDataItems).subscribe(() => {
+            this.refresh();
+            this.notify.success(this.l('SuccessfullyRemoved'));
+          });
+        }
+      },
+    );
+  }
+}

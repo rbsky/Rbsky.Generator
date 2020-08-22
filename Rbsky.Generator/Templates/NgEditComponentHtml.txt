@@ -1,0 +1,44 @@
+﻿<div class="modal-header">
+  <div class="modal-title">
+    <span *ngIf="editDto.@(Model.EntityNameLower).id"> {{ l('Edit') }} : {{ editName }} </span>
+    <span *ngIf="!editDto.@(Model.EntityNameLower).id"> {{ l('Add') }}</span>
+  </div>
+</div>
+
+<nz-spin [nzSpinning]="saving">
+  <form nz-form #validateForm="ngForm" (ngSubmit)="save()" nzLayout="vertical">
+@foreach (var item in Model.ClounmInfos)
+{
+ @:@if(@item.IsCreateOrEdit){
+ @:<!-- @item.PropertyDescription -->
+ @:<nz-form-item>
+ @:  <nz-form-label style="text-align: center;" nzSm="4" nzFor="@item.PropertyName" nzRequired>@item.PropertyDescription</nz-form-label>
+ @:  <nz-form-control nzHasFeedback nzSm="20">
+ @:    <input
+ @:      nz-input
+ @:      name="@item.PropertyName"
+ @:      #@item.PropertyName="ngModel"
+ @:      [(ngModel)]="editDto.@(Model.EntityNameLower).@item.PropertyName"
+ @:      [placeholder]="'@item.PropertyDescription'"
+ @:      required
+ @:      autocomplete="off"
+ @:    />
+ @:    <nz-form-explain *ngIf="@(item.PropertyName).control.dirty && @(item.PropertyName).control.errors">
+ @:      <ng-container *ngIf="@(item.PropertyName).control.hasError('required')">{{ l('ThisFieldIsRequired') }}</ng-container>
+ @:    </nz-form-explain>
+ @:  </nz-form-control>
+ @:</nz-form-item>
+  }      
+}
+   
+    <!-- 功能按钮 -->
+    <div class="modal-footer">
+      <button nz-button type="button" [disabled]="saving" (click)="close()">
+        {{ l('Cancel') }}
+      </button>
+      <button nz-button [nzType]="'primary'" type="submit" [disabled]="!validateForm.valid || saving">
+        {{ l('Save') }}
+      </button>
+    </div>
+  </form>
+</nz-spin>
