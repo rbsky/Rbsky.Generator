@@ -62,8 +62,8 @@
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.btnAddRow = new System.Windows.Forms.ToolStripButton();
             this.btnRemoveRow = new System.Windows.Forms.ToolStripButton();
-            this.btnEditRow = new System.Windows.Forms.ToolStripLabel();
             this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.btnEditRow = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -442,14 +442,6 @@
             this.btnRemoveRow.Text = "删除";
             this.btnRemoveRow.Click += new System.EventHandler(this.btnRemoveRow_Click);
             // 
-            // btnEditRow
-            // 
-            this.btnEditRow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnEditRow.Name = "btnEditRow";
-            this.btnEditRow.Size = new System.Drawing.Size(46, 28);
-            this.btnEditRow.Text = "编辑";
-            this.btnEditRow.Click += new System.EventHandler(this.btnEditRow_Click);
-            // 
             // tabControl2
             // 
             this.tabControl2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -459,6 +451,16 @@
             this.tabControl2.Size = new System.Drawing.Size(544, 562);
             this.tabControl2.TabIndex = 0;
             this.tabControl2.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.tabControl2_MouseDoubleClick);
+            // 
+            // btnEditRow
+            // 
+            this.btnEditRow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnEditRow.Image = ((System.Drawing.Image)(resources.GetObject("btnEditRow.Image")));
+            this.btnEditRow.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnEditRow.Name = "btnEditRow";
+            this.btnEditRow.Size = new System.Drawing.Size(50, 28);
+            this.btnEditRow.Text = "编辑";
+            this.btnEditRow.Click += new System.EventHandler(this.btnEditRow_Click);
             // 
             // AppForm
             // 
@@ -525,7 +527,6 @@
         private System.Windows.Forms.ToolStripButton btnAddRow;
         private System.Windows.Forms.ToolStripButton btnRemoveRow;
         private System.Windows.Forms.CheckBox ckVue;
-        private System.Windows.Forms.ToolStripLabel btnEditRow;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtDescription;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
@@ -533,6 +534,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.ToolStripButton btnEditRow;
     }
 }
 
