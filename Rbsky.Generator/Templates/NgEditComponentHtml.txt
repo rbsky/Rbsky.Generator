@@ -6,26 +6,25 @@
 </div>
 
 <nz-spin [nzSpinning]="saving">
-  <form nz-form #validateForm="ngForm" (ngSubmit)="save()" nzLayout="vertical">
+  <form nz-form #validateForm="ngForm" (ngSubmit)="save()" >
 @foreach (var item in Model.ClounmInfos)
 {
  @:@if(@item.IsCreateOrEdit){
  @:<!-- @item.PropertyDescription -->
  @:<nz-form-item>
  @:  <nz-form-label style="text-align: center;" nzSm="4" nzFor="@item.PropertyName" nzRequired>@item.PropertyDescription</nz-form-label>
- @:  <nz-form-control nzHasFeedback nzSm="20">
+ @:  <nz-form-control [nzErrorTip]="@(item.PropertyLowerName)ValidationTpl" nzHasFeedback nzSm="20">
  @:    <input
  @:      nz-input
- @:      name="@item.PropertyName"
- @:      #@item.PropertyName="ngModel"
- @:      [(ngModel)]="editDto.@(Model.EntityNameLower).@item.PropertyName"
+ @:      name="@item.PropertyLowerName"
+ @:      [(ngModel)]="editDto.@(Model.EntityNameLower).@item.PropertyLowerName"
  @:      [placeholder]="'@item.PropertyDescription'"
  @:      required
  @:      autocomplete="off"
  @:    />
- @:    <nz-form-explain *ngIf="@(item.PropertyName).control.dirty && @(item.PropertyName).control.errors">
- @:      <ng-container *ngIf="@(item.PropertyName).control.hasError('required')">{{ l('ThisFieldIsRequired') }}</ng-container>
- @:    </nz-form-explain>
+@:      <ng-template #@(item.PropertyLowerName)ValidationTpl let-control>
+@:         <validation-messages [formCtrl]="control"></validation-messages>
+@:      </ng-template>
  @:  </nz-form-control>
  @:</nz-form-item>
   }      

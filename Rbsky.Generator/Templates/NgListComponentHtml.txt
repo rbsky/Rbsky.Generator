@@ -2,7 +2,7 @@
 <nz-card [nzBordered]="false">
   <div class="mb-md">
     <!-- 搜索框 -->
-    <form nz-form [nzLayout]="'inline'" (ngSubmit)="refresh()" class="search__form">
+    <form nz-form  (ngSubmit)="refresh()" class="search__form">
       <div nz-row [nzGutter]="{ xs: 8, sm: 8, md: 8, lg: 24, xl: 48, xxl: 48 }">
         <div nz-col nzMd="8" nzSm="24">
           <nz-form-item>
@@ -100,7 +100,7 @@
       </ng-template>
       <!-- 分页信息显示 当前 1 页/共 3 页，共 5 条/显示 1-2 条 -->
       <ng-template #showTotalTemplate let-total let-range="range">
-        {{ l('GridFooterDisplayText', pageNumber, totalPages, total, range[0], range[1]) }}
+         <span [innerHTML]="'TotalRecordsCount' | localize: total"></span>
       </ng-template>
       <!-- 表头 -->
       <thead>
@@ -138,14 +138,14 @@
         <tr *ngFor="let item of ajaxTable.data">
           <td nzShowCheckbox [(nzChecked)]="item.checked" (nzCheckedChange)="refreshCheckStatus(dataList)"></td>
           <td>
-            <span nz-tooltip [nzTooltipTitle]="item.itemCode">
+            <span nz-tooltip [nzTooltipTitle]="item.code">
               <ellipsis lines="1">
                 {{ item.itemCode }}
               </ellipsis>
             </span>
           </td>
           <td>
-            <span nz-tooltip [nzTooltipTitle]="item.itemName">
+            <span nz-tooltip [nzTooltipTitle]="item.name">
               <ellipsis lines="1">
                 {{ item.itemName }}
               </ellipsis>
@@ -154,7 +154,7 @@
           <td class="text-center" [innerHTML]="item.isActive | yn"></td>
           <td>{{ item.creationUser }}</td>
           <td class="text-center">
-            <span nz-tooltip [nzTooltipTitle]="item.creationTime | _date:'YYYY-MM-DD'"> {{ item.creationTime | _date:'YYYY-MM-DD' }}</span>
+            <span nz-tooltip [nzTooltipTitle]="item.creationTime | _date:'yyyy-MM-dd'"> {{ item.creationTime | _date:'yyyy-MM-dd' }}</span>
           </td>
           <td class="text-center" nzRight>
             <!-- 操作 -->
