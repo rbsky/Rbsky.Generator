@@ -12,7 +12,7 @@
  @:@if(@item.IsCreateOrEdit){
  @:<!-- @item.PropertyDescription -->
  @:<nz-form-item>
- @:  <nz-form-label style="text-align: center;" nzSm="4" nzFor="@item.PropertyName" nzRequired>@item.PropertyDescription</nz-form-label>
+ @:  <nz-form-label style="text-align: center;" nzSm="4" nzFor="@item.PropertyLowerName" nzRequired>@item.PropertyDescription</nz-form-label>
  @:  <nz-form-control [nzErrorTip]="@(item.PropertyLowerName)ValidationTpl" nzHasFeedback nzSm="20">
  @:    <input
  @:      nz-input
