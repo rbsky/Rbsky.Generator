@@ -35,7 +35,7 @@ namespace @Model.NameSpace.@(Model.EntityName)s
         /// <summary>
         /// 批量删除@(Model.EntityDescription)
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="inputs"></param>
         /// <returns></returns>
         Task BatchDelete(List<EntityDto<@Model.EntityKeyType>> inputs);
     }

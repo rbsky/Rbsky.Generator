@@ -28,7 +28,11 @@ namespace @Model.NameSpace.@(Model.EntityName)s
             _@(Model.EntityNameLower)Repository = @(Model.EntityNameLower)Repository;
         }
         #endregion
-
+        /// <summary>
+        /// 分页获取@(Model.EntityDescription)数据集合
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task<PagedResultDto<@(Model.EntityName)ListDto>> GetPaged@(Model.EntityName)s(@(Model.EntityName)PagedInput input)
         {
             var query = _@(Model.EntityNameLower)Repository.GetAll();
@@ -44,7 +48,11 @@ namespace @Model.NameSpace.@(Model.EntityName)s
                     return dto;
                 }).ToList());
         }
-
+        /// <summary>
+        /// 获取@(Model.EntityDescription)编辑信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task<Get@(Model.EntityName)ForEditDto> Get@(Model.EntityName)ForEdit(NullableIdDto<@Model.EntityKeyType> input)
         {
             var get@(Model.EntityName)ForEdit = new Get@(Model.EntityName)ForEditDto()
@@ -60,7 +68,11 @@ namespace @Model.NameSpace.@(Model.EntityName)s
 
             return get@(Model.EntityName)ForEdit;
         }
-
+        /// <summary>
+        /// 创建或修改@(Model.EntityDescription)信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
         public async Task CreateOrUpdate@(Model.EntityName)(Get@(Model.EntityName)ForEditDto input)
         {
             if (input.@(Model.EntityName).Id.HasValue && input.@(Model.EntityName).Id.Value > 0)
