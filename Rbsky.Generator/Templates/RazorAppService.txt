@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using @(Model.NameSpace).Authorization;
 using @Model.NameSpace.@(Model.EntityName)s.Dtos;
-
+using Rbsky.Product;
 namespace @Model.NameSpace.@(Model.EntityName)s
 {
     /// <summary>
